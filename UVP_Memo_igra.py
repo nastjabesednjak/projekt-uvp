@@ -20,13 +20,14 @@ prikaz = [0, 0, 0, 0]
 pravilno_msto_barva = 0
 pravilna_barva = 0
 
+#Računalnik naključno izbere 4 barve
 def izbira():
     global barve
-    dokoncano = 0
+    dokoncano_izbiranje = 0
 
     barve[0] = random.randint(1, 6)
 
-    while dokoncano == 0:
+    while dokoncano_izbiranje == 0:
 
         barve[1] = random.randint(1, 6)
 
@@ -36,11 +37,11 @@ def izbira():
 
         else:
 
-            dokoncano = 1
+            dokoncano_izbiranje = 1
 
-    dokoncano = 0
+    dokoncano_izbiranje = 0
 
-    while dokoncano == 0:
+    while dokoncano_izbiranje == 0:
 
         barve[2] = random.randint(1, 6)
 
@@ -50,11 +51,11 @@ def izbira():
 
         else:
 
-            dokoncano = 1
+            dokoncano_izbiranje = 1
 
-    dokoncano = 0
+    dokoncano_izbiranje = 0
 
-    while dokoncano == 0:
+    while dokoncano_izbiranje == 0:
 
         barve[3] = random.randint(1, 6)
 
@@ -64,10 +65,11 @@ def izbira():
 
         else:
 
-            dokoncano = 1
+            dokoncano_izbiranje = 1
 
 izbira()
 
+#Preveri , če se igralčev poskus ujema z izbranimi barvami
 def Preveri_poskus():
     global prikaz, pravilno_mesto_barva, pravilna_barva, y1, y2
 
@@ -89,6 +91,7 @@ def Preveri_poskus():
         Polje_preverjanje.create_oval(x3, y1, x4, y2)
         pravilna_barva -= 1
 
+#Izpiše črn krogec, če je igralec na pravilno mesto postavil pravo barvo in bel krogec, če je igralecugotovil samo barvo
 def Primerjava_resitev():
     global barve, vnos, prikaz
 
@@ -98,7 +101,7 @@ def Primerjava_resitev():
         else:
             prikaz[0] = 1
     else:
-        vnos[0] = 0
+        prikaz[0] = 0
 
     if barve[1] in vnos:
         if vnos[1] == barve[1]:
@@ -107,7 +110,7 @@ def Primerjava_resitev():
         else:
             prikaz[1] = 1
     else:
-        vnos[0] = 0
+        prikaz[1] = 0
 
     if barve[2] in vnos:
         if vnos[2] == barve[2]:
@@ -115,7 +118,7 @@ def Primerjava_resitev():
         else:
             prikaz[2] = 1
     else:
-        vnos[0] = 0
+        prikaz[2] = 0
 
     if barve[3] in vnos:
         if vnos[3] == barve[3]:
@@ -123,7 +126,7 @@ def Primerjava_resitev():
         else:
             prikaz[3] = 1
     else:
-        vnos[0] = 0
+        prikaz[3] = 0
 
     Preveri_poskus()
 
@@ -260,11 +263,11 @@ ZelenGumb = Button(OkvirBarve, text='Zelena', bg="green", command = Zelena)
 OranzenGumb = Button(OkvirBarve, text='Oranžna', bg="orange", command = Oranzna)
 VijolaGumb = Button(OkvirBarve, text='Vijola', bg="purple", fg="white", command = Vijola)
 ModerGumb.pack(side=LEFT)
-RumenGumb.pack(side=LEFT)
 RdecGumb.pack(side=LEFT)
+RumenGumb.pack(side=LEFT)
 ZelenGumb.pack(side=LEFT)
-OranzenGumb.pack(side=LEFT)
 VijolaGumb.pack(side=LEFT)
+OranzenGumb.pack(side=LEFT)
 
 menu = Menu(okno)
 okno.config(menu=menu)
