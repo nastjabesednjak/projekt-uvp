@@ -1,5 +1,5 @@
 from tkinter import *
-import tkinter messagebox
+import tkinter.messagebox
 import os
 import random
 
