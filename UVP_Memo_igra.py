@@ -19,7 +19,7 @@ prikaz = [0, 0, 0, 0]
 pravilno_msto_barva = 0
 pravilna_barva = 0
 
-#Računalnik naključno izbere 4 barve
+# Računalnik naključno izbere 4 izmed 6 barv
 def izbira():
     global barve
     dokoncano_izbiranje = 0
@@ -134,7 +134,7 @@ def Pravilna_resitev(resitev):
     x6 += 30
     PoljeResitev.create_oval(x5, y3, x6, y4, fill=barva4)
 
-#Preveri , če se igralčev poskus ujema z izbranimi barvami
+#Preveri igralčev poskus, če se ugibanje ujema z izbranimi barvammi
 def Preveri_poskus():
     global prikaz, pravilno_mesto_barva, pravilna_barva, y1, y2
 
@@ -156,7 +156,6 @@ def Preveri_poskus():
         Polje_preverjanje.create_oval(x3, y1, x4, y2)
         pravilna_barva -= 1
 
-#Izpiše črn krogec, če je igralec na pravilno mesto postavil pravo barvo in bel krogec, če je igralecugotovil samo barvo
 def Primerjava_resitev():
     global barve, vnos, prikaz
 
@@ -229,16 +228,21 @@ def LahkaTezavnost():
 def Ugibanje(barva):
 
     global vnos
+
     if vnos[0] == 0:
         vnos[0] = barva
     elif vnos[1] == 0:
         vnos[1] = barva
+
     elif vnos[2] == 0:
         vnos[2] = barva
+
     elif vnos[3] == 0:
         vnos[3] = barva
+
+        Primerjava_resitev()
     else:
-        vnos = [0, 0, 0, 0]
+        vnos = [0, 0, 0, 0,]
         Ugibanje(barva)
 
 def Modra():
@@ -295,9 +299,6 @@ def SpawnKrog():
             PoljeKrogi.create_oval(x1, y1, x2, y2, fill=barva)
             poskus += 1
 
-            if poskus == 4:
-                Primerjava_resitev()
-
         else:
 
             x1 = 55
@@ -308,14 +309,14 @@ def SpawnKrog():
             PoljeKrogi.create_oval(x1, y1, x2, y2, fill=barva)
             poskus = 1
 
-
         tezavnost -= 1
 
 def NovaIgra():
 
-    global PoljeKrogi, tezavnost, tezavnostRaw, x1, x2, y1, y2, poskus, Polje_preverjanje
+    global tezavnost, tezavnostRaw, x1, x2, y1, y2, poskus
     PoljeKrogi.delete(ALL)
     Polje_preverjanje.delete(ALL)
+    PoljeResitev.delete(ALL)
     tezavnost = tezavnostRaw * 4
 
     x1 = 25
@@ -362,11 +363,15 @@ podMenu2.add_command(label='Lahko', command=LahkaTezavnost)
 podMenu2.add_command(label='Srednje', command=SradnjaTezavnost)
 podMenu2.add_command(label='Težko', command=TezjaTezavnost)
 
+ResitevOkvir = Frame(okno)
 IgraOkvir = Frame(okno)
-PoljeKrogi = Canvas(IgraOkvir, width=200, height=500)
+PoljeResitev = Canvas(ResitevOkvir, width=400, height=50)
+PoljeKrogi = Canvas(IgraOkvir, width=200, height=300)
+ResitevOkvir.pack(side=BOTTOM)
 IgraOkvir.pack(side=BOTTOM)
-Polje_preverjanje = Canvas(IgraOkvir, width = 200, height = 500)
+Polje_preverjanje = Canvas(IgraOkvir, width = 200, height = 300)
 PoljeKrogi.pack(side = LEFT)
 Polje_preverjanje.pack(side = RIGHT)
+PoljeResitev.pack(side = BOTTOM)
 
 okno.mainloop()
