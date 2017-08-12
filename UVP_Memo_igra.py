@@ -1,7 +1,6 @@
 from tkinter import *
-
+import tkinter messagebox
 import os
-
 import random
 
 x1 = 25
@@ -69,6 +68,72 @@ def izbira():
 
 izbira()
 
+#prikaze pravilno resitev
+def Pravilna_resitev(resitev):
+    x5 = 175
+    x6 = 150
+    y3 = 50
+    y4 = 25
+    if resitev[0] == 1:
+        barva1 = "blue"
+    elif resitev[0] == 2:
+        barva1 = "red"
+    elif resitev[0] == 3:
+        barva1 = "yellow"
+    elif resitev[0] == 4:
+        barva1 = "green"
+    elif resitev[0] == 5:
+        barva1 = "purple"
+    else:
+        barva1 = "orange"
+    if resitev[1] == 1:
+        barva2 = "blue"
+    elif resitev[1] == 2:
+        barva2 = "red"
+    elif resitev[1] == 3:
+        barva2 = "yellow"
+    elif resitev[1] == 4:
+        barva2 = "green"
+    elif resitev[1] == 5:
+        barva2 = "purple"
+    else:
+        barva2 = "orange"
+    if resitev[2] == 1:
+        barva3 = "blue"
+    elif resitev[2] == 2:
+        barva3 = "red"
+    elif resitev[2] == 3:
+        barva3 = "yellow"
+    elif resitev[2] == 4:
+        barva3 = "green"
+    elif resitev[2] == 5:
+        barva3 = "purple"
+    else:
+        barva3 = "orange"
+    if resitev[3] == 1:
+        barva4 = "blue"
+    elif resitev[3] == 2:
+        barva4 = "red"
+    elif resitev[3] == 3:
+        barva4 = "yellow"
+    elif resitev[3] == 4:
+        barva4 = "green"
+    elif resitev[3] == 5:
+        barva4 = "purple"
+    else:
+        barva4 = "orange"
+
+    PoljeResitev.create_oval(x5, y3, x6, y4, fill=barva1)
+    x5 += 30
+    x6 += 30
+    PoljeResitev.create_oval(x5, y3, x6, y4, fill=barva2)
+    x5 += 30
+    x6 += 30
+    PoljeResitev.create_oval(x5, y3, x6, y4, fill=barva3)
+    x5 += 30
+    x6 += 30
+    PoljeResitev.create_oval(x5, y3, x6, y4, fill=barva4)
+
 #Preveri , če se igralčev poskus ujema z izbranimi barvami
 def Preveri_poskus():
     global prikaz, pravilno_mesto_barva, pravilna_barva, y1, y2
@@ -129,7 +194,19 @@ def Primerjava_resitev():
         prikaz[3] = 0
 
     Preveri_poskus()
+    Konec_igre()
 
+def Konec_igre():
+    global vnos, barve, poskus, tezavnost
+    if vnos == barve:
+        tezavnost = 0
+        Pravilna_resitev(barve)
+        tkinter.messagebox.showinfo("Memo", "Čestitam, našli ste pravilno rešitev!")
+    elif tezavnost != 0:
+        NONE
+    else:
+        Pravilna_resitev(barve)
+        tkinter.messagebox.showinfo("Memo", "Poskusite ponovno.")
 
 def SradnjaTezavnost():
 
