@@ -16,123 +16,52 @@ barva = "black"
 barve = [0, 0, 0, 0]
 vnos = [0, 0, 0, 0]
 prikaz = [0, 0, 0, 0]
-pravilno_msto_barva = 0
+pravilno_mesto_barva = 0
 pravilna_barva = 0
 
 # Računalnik naključno izbere 4 izmed 6 barv
 def izbira():
     global barve
-    dokoncano_izbiranje = 0
 
+    index = 1
     barve[0] = random.randint(1, 6)
 
-    while dokoncano_izbiranje == 0:
+    izbrane_barve = [barve[0], 0, 0, 0]
 
-        barve[1] = random.randint(1, 6)
-
-        if barve[1] == barve[0]:
-
-            barve[1] = 0
-
-        else:
-
-            dokoncano_izbiranje = 1
-
-    dokoncano_izbiranje = 0
-
-    while dokoncano_izbiranje == 0:
-
-        barve[2] = random.randint(1, 6)
-
-        if barve[2] == barve[0] or barve[2] == barve[1]:
-
-            barve[2] = 0
-
-        else:
-
-            dokoncano_izbiranje = 1
-
-    dokoncano_izbiranje = 0
-
-    while dokoncano_izbiranje == 0:
-
-        barve[3] = random.randint(1, 6)
-
-        if barve[3] == barve[0] or barve[3] == barve[1] or barve[3] == barve[2]:
-
-            barve[3] = 0
-
-        else:
-
-            dokoncano_izbiranje = 1
+    while index < 4:
+        barve[index] = random.randint(1, 6)
+        if barve[index] not in izbrane_barve:
+            izbrane_barve[index] = barve[index]
+            index += 1
 
 izbira()
 
 #prikaze pravilno resitev
 def Pravilna_resitev(resitev):
+    global barva
+
     x5 = 175
     x6 = 150
     y3 = 50
     y4 = 25
-    if resitev[0] == 1:
-        barva1 = "blue"
-    elif resitev[0] == 2:
-        barva1 = "red"
-    elif resitev[0] == 3:
-        barva1 = "yellow"
-    elif resitev[0] == 4:
-        barva1 = "green"
-    elif resitev[0] == 5:
-        barva1 = "purple"
-    else:
-        barva1 = "orange"
-    if resitev[1] == 1:
-        barva2 = "blue"
-    elif resitev[1] == 2:
-        barva2 = "red"
-    elif resitev[1] == 3:
-        barva2 = "yellow"
-    elif resitev[1] == 4:
-        barva2 = "green"
-    elif resitev[1] == 5:
-        barva2 = "purple"
-    else:
-        barva2 = "orange"
-    if resitev[2] == 1:
-        barva3 = "blue"
-    elif resitev[2] == 2:
-        barva3 = "red"
-    elif resitev[2] == 3:
-        barva3 = "yellow"
-    elif resitev[2] == 4:
-        barva3 = "green"
-    elif resitev[2] == 5:
-        barva3 = "purple"
-    else:
-        barva3 = "orange"
-    if resitev[3] == 1:
-        barva4 = "blue"
-    elif resitev[3] == 2:
-        barva4 = "red"
-    elif resitev[3] == 3:
-        barva4 = "yellow"
-    elif resitev[3] == 4:
-        barva4 = "green"
-    elif resitev[3] == 5:
-        barva4 = "purple"
-    else:
-        barva4 = "orange"
 
-    PoljeResitev.create_oval(x5, y3, x6, y4, fill=barva1)
-    x5 += 30
-    x6 += 30
-    PoljeResitev.create_oval(x5, y3, x6, y4, fill=barva2)
-    x5 += 30
-    x6 += 30
-    PoljeResitev.create_oval(x5, y3, x6, y4, fill=barva3)
-    x5 += 30
-    x6 += 30
-    PoljeResitev.create_oval(x5, y3, x6, y4, fill=barva4)
+    for stevilka_barve in resitev:
+        if stevilka_barve == 1:
+            barva = "blue"
+        elif stevilka_barve == 2:
+            barva = "red"
+        elif stevilka_barve == 3:
+            barva = "yellow"
+        elif stevilka_barve == 4:
+            barva = "green"
+        elif stevilka_barve == 5:
+            barva = "purple"
+        else:
+            barva = "orange"
+
+        PoljeResitev.create_oval(x5, y3, x6, y4, fill=barva)
+        x5 += 30
+        x6 += 30
 
 #Preveri igralčev poskus, če se ugibanje ujema z izbranimi barvammi
 def Preveri_poskus():
@@ -202,7 +131,7 @@ def Konec_igre():
         Pravilna_resitev(barve)
         tkinter.messagebox.showinfo("Memo", "Čestitam, našli ste pravilno rešitev!")
     elif tezavnost != 0:
-        NONE
+        None
     else:
         Pravilna_resitev(barve)
         tkinter.messagebox.showinfo("Memo", "Poskusite ponovno.")
@@ -233,74 +162,51 @@ def Ugibanje(barva):
         vnos[0] = barva
     elif vnos[1] == 0:
         vnos[1] = barva
-
     elif vnos[2] == 0:
         vnos[2] = barva
-
     elif vnos[3] == 0:
         vnos[3] = barva
-
         Primerjava_resitev()
     else:
         vnos = [0, 0, 0, 0,]
         Ugibanje(barva)
 
 def Modra():
-
-    global barva
-    barva = "blue"
-    SpawnKrog()
+    SpawnKrog("blue")
     Ugibanje(1)
 
 def Rdeca():
-
-    global barva
-    barva = "red"
-    SpawnKrog()
+    SpawnKrog("red")
     Ugibanje(2)
 
 def Rumena():
-
-    global barva
-    barva = "yellow"
-    SpawnKrog()
+    SpawnKrog("yellow")
     Ugibanje(3)
 
 def Zelena():
-
-    global barva
-    barva = "green"
-    SpawnKrog()
+    SpawnKrog("green")
     Ugibanje(4)
 
 def Vijola():
-
-    global barva
-    barva = "purple"
-    SpawnKrog()
+    SpawnKrog("purple")
     Ugibanje(5)
 
 def Oranzna():
-
-    global barva
-    barva = "orange"
-    SpawnKrog()
+    SpawnKrog("orange")
     Ugibanje(6)
 
-def SpawnKrog():
+def SpawnKrog(barva):
 
-    global x1, x2, y1, y2, barva, poskus, tezavnost
+    global x1, x2, y1, y2, poskus, tezavnost
 
     if tezavnost != 0:
         if poskus <= 3:
-
             x1 += 30
             x2 += 30
             PoljeKrogi.create_oval(x1, y1, x2, y2, fill=barva)
             poskus += 1
 
         else:
-
             x1 = 55
             x2 = 30
             y1 += 30
@@ -313,11 +219,17 @@ def SpawnKrog():
 
 def NovaIgra():
 
-    global tezavnost, tezavnostRaw, x1, x2, y1, y2, poskus
+    global tezavnost, tezavnostRaw, x1, x2, y1, y2, poskus, barve, vnos, prikaz, pravilno_mesto_barva, pravilna_barva
     PoljeKrogi.delete(ALL)
     Polje_preverjanje.delete(ALL)
     PoljeResitev.delete(ALL)
     tezavnost = tezavnostRaw * 4
+
+    barve = [0, 0, 0, 0]
+    vnos = [0, 0, 0, 0]
+    prikaz = [0, 0, 0, 0]
+    pravilno_mesto_barva = 0
+    pravilna_barva = 0
 
     x1 = 25
     x2 = 0
@@ -325,8 +237,9 @@ def NovaIgra():
     y2 = 25
     poskus = 0
 
-def pravila():
+    izbira()
 
+def pravila():
     os.startfile("Pravila")
 
 okno = Tk()
