@@ -36,7 +36,7 @@ def izbira():
 
 izbira()
 
-#prikaze pravilno resitev
+#Po koncu igre se prikaže pravilna rešitev
 def Pravilna_resitev(resitev):
     global barva
 
@@ -58,7 +58,6 @@ def Pravilna_resitev(resitev):
             barva = "purple"
         else:
             barva = "orange"
-
         PoljeResitev.create_oval(x5, y3, x6, y4, fill=barva)
         x5 += 30
         x6 += 30
@@ -95,16 +94,13 @@ def Primerjava_resitev():
             prikaz[0] = 1
     else:
         prikaz[0] = 0
-
     if barve[1] in vnos:
         if vnos[1] == barve[1]:
             prikaz[1] = 2
-
         else:
             prikaz[1] = 1
     else:
         prikaz[1] = 0
-
     if barve[2] in vnos:
         if vnos[2] == barve[2]:
             prikaz[2] = 2
@@ -124,6 +120,7 @@ def Primerjava_resitev():
     Preveri_poskus()
     Konec_igre()
 
+#Ob koncu igre se pokaže pravilna rešitev in sporočilo
 def Konec_igre():
     global vnos, barve, poskus, tezavnost
     if vnos == barve:
@@ -137,25 +134,21 @@ def Konec_igre():
         tkinter.messagebox.showinfo("Memo", "Poskusite ponovno.")
 
 def SradnjaTezavnost():
-
     global tezavnostRaw
     tezavnostRaw = 6
     NovaIgra()
 
 def TezjaTezavnost():
-
     global tezavnostRaw
     tezavnostRaw = 5
     NovaIgra()
 
 def LahkaTezavnost():
-
     global tezavnostRaw
     tezavnostRaw = 7
     NovaIgra()
 
 def Ugibanje(barva):
-
     global vnos
 
     if vnos[0] == 0:
@@ -196,7 +189,6 @@ def Oranzna():
     Ugibanje(6)
 
 def SpawnKrog(barva):
-
     global x1, x2, y1, y2, poskus, tezavnost
 
     if tezavnost != 0:
@@ -205,20 +197,16 @@ def SpawnKrog(barva):
             x2 += 30
             PoljeKrogi.create_oval(x1, y1, x2, y2, fill=barva)
             poskus += 1
-
         else:
             x1 = 55
             x2 = 30
             y1 += 30
             y2 += 30
-
             PoljeKrogi.create_oval(x1, y1, x2, y2, fill=barva)
             poskus = 1
-
         tezavnost -= 1
 
 def NovaIgra():
-
     global tezavnost, tezavnostRaw, x1, x2, y1, y2, poskus, barve, vnos, prikaz, pravilno_mesto_barva, pravilna_barva
     PoljeKrogi.delete(ALL)
     Polje_preverjanje.delete(ALL)
