@@ -36,7 +36,7 @@ def izbira():
 
 izbira()
 
-#prikaze pravilno resitev
+#Ob koncu igre se prikaže pravilna rešitev
 def pravilna_resitev(resitev):
     global barva
 
@@ -124,6 +124,9 @@ def primerjava_resitev():
     preveri_poskus()
     konec_igre()
 
+# Ko igralec ugotovi pravilno rešitev ali uporabi vse poiskuse,
+# se mu prikaže pravilna rešitev in
+# okno s čestitkami ali "poskusite ponovno".
 def konec_igre():
     global vnos, barve, poskus, tezavnost
     if vnos == barve:
@@ -199,6 +202,7 @@ def oranzna():
     SpawnKrog("orange")
     ugibanje(6)
 
+# Ob vsakem igralčevem kliku na barvo se izriše nov krog v izbravi barvi.
 def SpawnKrog(barva):
 
     global x1, x2, y1, y2, poskus, tezavnost
