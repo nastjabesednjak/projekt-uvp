@@ -124,7 +124,7 @@ def primerjava_resitev():
     preveri_poskus()
     konec_igre()
 
-# Ko igralec ugotovi pravilno rešitev ali uporabi vse poiskuse,
+# Ko igralec ugotovi pravilno rešitev, ali uporabi vse poiskuse,
 # se mu prikaže pravilna rešitev in
 # okno s čestitkami ali "poskusite ponovno".
 def konec_igre():
