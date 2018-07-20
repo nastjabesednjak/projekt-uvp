@@ -3,75 +3,114 @@ import tkinter.messagebox
 import os
 import random
 
-x1 = 25
-x2 = 0
-y1 = 50
-y2 = 25
+class Parametri:
+    def __init__(self):
+        pass
+    x1 = 55
+    x2 = 30
+    y1 = 50
+    y2 = 25
+    poskus = 0
+    tezavnost = 6
+    tezavnost_raw = 6
 
-poskus = 0
-tezavnost = 24
-tezavnostRaw = 6
-barva = "black"
+parametri = Parametri
 
-barve = [0, 0, 0, 0]
-vnos = [0, 0, 0, 0]
-prikaz = [0, 0, 0, 0]
-pravilno_mesto_barva = 0
-pravilna_barva = 0
+class Barve:
+    def __init__(self):
+        self.barve = [0,0,0,0]
 
-# Računalnik naključno izbere 4 izmed 6 barv
-def izbira():
-    global barve
+    @property
+    def generator_barv(self):               #Naključno izbere barve, ki jih igralec išče.
 
-    index = 1
-    barve[0] = random.randint(1, 6)
+        index = 1
+        self.barve[0] = random.randint(1, 6)
 
-    izbrane_barve = [barve[0], 0, 0, 0]
+        izbrane_barve = [self.barve[0], 0, 0, 0]
 
-    while index < 4:
-        barve[index] = random.randint(1, 6)
-        if barve[index] not in izbrane_barve:
-            izbrane_barve[index] = barve[index]
-            index += 1
+        while index < 4:
+            self.barve[index] = random.randint(1, 6)
+            if self.barve[index] not in izbrane_barve:
+                izbrane_barve[index] = self.barve[index]
+                index += 1
+        return izbrane_barve
 
-izbira()
+    @generator_barv.setter                  #Izbiro generatorja shrani v "barve".
+    def generator_barv(self, izbrane_barve):
+        self.barve = izbrane_barve
 
-#Ob koncu igre se prikaže pravilna rešitev
-def pravilna_resitev(resitev):
-    global barva
+izbira = Barve()
+izbira.barve = izbira.generator_barv
 
-    x5 = 175
-    x6 = 150
-    y3 = 50
-    y4 = 25
+class Vnos:
+    def __init__(self):
+        self.vnos = [0,0,0,0]
 
-    for stevilka_barve in resitev:
-        if stevilka_barve == 1:
-            barva = "blue"
-        elif stevilka_barve == 2:
-            barva = "red"
-        elif stevilka_barve == 3:
-            barva = "yellow"
-        elif stevilka_barve == 4:
-            barva = "green"
-        elif stevilka_barve == 5:
-            barva = "purple"
+    def ugibanje(self, barva):    # Igralčevo barvo vnese na posamezno mesto v vrstici ugibanja.
+
+        self.barva = barva
+
+        if self.vnos[0] == 0:
+            self.vnos[0] = self.barva
+        elif self.vnos[1] == 0:
+            self.vnos[1] = self.barva
+        elif self.vnos[2] == 0:
+            self.vnos[2] = self.barva
+        elif self.vnos[3] == 0:
+            self.vnos[3] = self.barva
+            primerjava_resitve(izbira.barve, self.vnos)
         else:
-            barva = "orange"
+            self.vnos = [0, 0, 0, 0,]  # Če so vse barve enega poskusa izbrane, se funkcija ponastavi in se ponovno izvede
+            self.vnos[0] = self.barva
 
-        polje_resitev.create_oval(x5, y3, x6, y4, fill=barva)
-        x5 += 30
-        x6 += 30
+vnos = Vnos()
 
-#Preveri igralčev poskus, če se ugibanje ujema z izbranimi barvammi
-def preveri_poskus():
-    global prikaz, pravilno_mesto_barva, pravilna_barva, y1, y2
+def SpawnKrog(barva, poskus, tezavnost, x1, x2, y1, y2):
+
+    if tezavnost != 0:
+        if poskus <= 2:             #Izriše kroge na pozicijah 0, 1, 2
+            parametri.x1 += 30
+            parametri.x2 += 30
+            polje_krogi.create_oval(x1, y1,x2, y2, fill=barva)
+            parametri.poskus += 1
+
+        else:                           #Nariše zadnji krog na poziciji 3
+            parametri.x1 = 55
+            parametri.x2 = 30
+            parametri.y1 += 30
+            parametri.y2 += 30
+            polje_krogi.create_oval(x1, y1, x2, y2, fill=barva)
+            parametri.poskus = 0
+
+            parametri.tezavnost -= 1
+
+    slovar_stevk = {"blue" : 1, "red" : 2, "yellow" : 3,"green" : 4,"purple" : 5, "orange" : 6}
+    vnos.ugibanje(slovar_stevk.get(barva))
+
+def primerjava_resitve(barve, vnos):
+
+    i = 0
+    prikaz = [0, 0, 0, 0]
+    for n in barve:
+        if n in vnos:
+            if vnos[i] == n:
+                prikaz[i] = 2
+            else:
+                prikaz[i] = 1
+        else:
+            prikaz[i] = 0
+        i += 1
+
+    izpis_primerjave(prikaz, parametri.y1-30, parametri.y2-30)
+    konec_poskusa(vnos, barve, parametri.tezavnost)
+
+def izpis_primerjave(prikaz, y1, y2):
 
     x3 = 25
     x4 = 0
-
     pravilno_mesto_barva = prikaz.count(2)
     pravilna_barva = prikaz.count(1)
+    #print(prikaz)
 
     while pravilno_mesto_barva > 0:
         x3 += 30
@@ -85,50 +124,21 @@ def preveri_poskus():
         polje_preverjanje.create_oval(x3, y1, x4, y2)
         pravilna_barva -= 1
 
-def primerjava_resitev():
-    global barve, vnos, prikaz
+def pravilna_resitev(resitev):
 
-    if barve[0] in vnos:
-        if vnos[0] == barve[0]:
-            prikaz[0] = 2
-        else:
-            prikaz[0] = 1
-    else:
-        prikaz[0] = 0
+    x5 = 175
+    x6 = 150
 
-    if barve[1] in vnos:
-        if vnos[1] == barve[1]:
-            prikaz[1] = 2
+    slovar_barv = {1 : "blue", 2 : "red", 3 : "yellow", 4 : "green", 5 : "purple", 6 : "orange"}
 
-        else:
-            prikaz[1] = 1
-    else:
-        prikaz[1] = 0
+    for stevilka_barve in resitev:
+        polje_resitev.create_oval(x5, 50, x6, 25, fill=slovar_barv.get(stevilka_barve))
+        x5 += 30
+        x6 += 30
 
-    if barve[2] in vnos:
-        if vnos[2] == barve[2]:
-            prikaz[2] = 2
-        else:
-            prikaz[2] = 1
-    else:
-        prikaz[2] = 0
-
-    if barve[3] in vnos:
-        if vnos[3] == barve[3]:
-            prikaz[3] = 2
-        else:
-            prikaz[3] = 1
-    else:
-        prikaz[3] = 0
-
-    preveri_poskus()
-    konec_igre()
-
-# Ko igralec ugotovi pravilno rešitev, ali uporabi vse poiskuse,
-# se mu prikaže pravilna rešitev in
-# okno s čestitkami ali "poskusite ponovno".
-def konec_igre():
-    global vnos, barve, poskus, tezavnost
+def konec_poskusa(vnos, barve, tezavnost):      # Ko igralec ugotovi pravilno rešitev ali uporabi vse poiskuse,
+                                                # se mu prikaže pravilna rešitev in
+                                                # okno s čestitkami ali "poskusite ponovno".
     if vnos == barve:
         tezavnost = 0
         pravilna_resitev(barve)
@@ -139,113 +149,40 @@ def konec_igre():
         pravilna_resitev(barve)
         tkinter.messagebox.showinfo("Memo", "Poskusite ponovno.")
 
-#Določi srednjo težavnostno stopnjo s šestimi mogočimi poskusi
+def nova_igra():
+
+    polje_krogi.delete(ALL)
+    polje_preverjanje.delete(ALL)
+    polje_resitev.delete(ALL)
+
+    parametri.poskus = 0
+    parametri.tezavnost = parametri.tezavnost_raw
+
+    vnos.vnos = [0, 0, 0, 0]
+
+    parametri.x1 = 55
+    parametri.x2 = 30
+    parametri.y1 = 50
+    parametri.y2 = 25
+
+    izbira.barve = izbira.generator_barv
+
 def srednja_tezavnost():
 
-    global tezavnostRaw
-    tezavnostRaw = 6
+    parametri.tezavnost_raw = 6
     nova_igra()
 
 #Določi težjo težavnostno stopnjo s petimi mogočimi poskusi
 def tezja_tezavnost():
 
-    global tezavnostRaw
-    tezavnostRaw = 5
+    parametri.tezavnost_raw = 5
     nova_igra()
 
 #Določi lažjo težavnostno stopnjo s sedmimi mogočimi poskusi
 def lahka_tezavnost():
 
-    global tezavnostRaw
-    tezavnostRaw = 7
+    parametri.tezavnost_raw = 7
     nova_igra()
-
-def ugibanje(barva):
-
-    global vnos
-
-    if vnos[0] == 0:
-        vnos[0] = barva
-    elif vnos[1] == 0:
-        vnos[1] = barva
-    elif vnos[2] == 0:
-        vnos[2] = barva
-    elif vnos[3] == 0:
-        vnos[3] = barva
-        primerjava_resitev()
-    else:
-        vnos = [0, 0, 0, 0,]
-        ugibanje(barva)
-
-#Funkcije z imeni barv posamezni številki priredijo določeno barvo
-def modra():
-    SpawnKrog("blue")
-    ugibanje(1)
-
-def rdeca():
-    SpawnKrog("red")
-    ugibanje(2)
-
-def rumena():
-    SpawnKrog("yellow")
-    ugibanje(3)
-
-def zelena():
-    SpawnKrog("green")
-    ugibanje(4)
-
-def vijola():
-    SpawnKrog("purple")
-    ugibanje(5)
-
-def oranzna():
-    SpawnKrog("orange")
-    ugibanje(6)
-
-# Ob vsakem igralčevem kliku na barvo se izriše nov krog v izbravi barvi.
-def SpawnKrog(barva):
-
-    global x1, x2, y1, y2, poskus, tezavnost
-
-    if tezavnost != 0:
-        if poskus <= 3:
-            x1 += 30
-            x2 += 30
-            polje_krogi.create_oval(x1, y1, x2, y2, fill=barva)
-            poskus += 1
-
-        else:
-            x1 = 55
-            x2 = 30
-            y1 += 30
-            y2 += 30
-
-            polje_krogi.create_oval(x1, y1, x2, y2, fill=barva)
-            poskus = 1
-
-        tezavnost -= 1
-
-def nova_igra():
-
-    global tezavnost, tezavnostRaw, x1, x2, y1, y2, poskus, barve, vnos, prikaz, pravilno_mesto_barva, pravilna_barva
-    polje_krogi.delete(ALL)
-    polje_preverjanje.delete(ALL)
-    polje_resitev.delete(ALL)
-    tezavnost = tezavnostRaw * 4
-
-    barve = [0, 0, 0, 0]
-    vnos = [0, 0, 0, 0]
-    prikaz = [0, 0, 0, 0]
-    pravilno_mesto_barva = 0
-    pravilna_barva = 0
-
-    x1 = 25
-    x2 = 0
-    y1 = 50
-    y2 = 25
-    poskus = 0
-
-    izbira()
 
 def pravila():
     os.startfile("Pravila")
@@ -255,12 +192,13 @@ okno = Tk()
 okvir_barve = Frame(okno)
 okvir_barve.pack()
 
-moder_gumb = Button(okvir_barve, text='Modra', bg="blue", fg="white", command = modra)
-rumen_gumb = Button(okvir_barve, text='Rumena', bg="yellow", command = rumena)
-rdec_gumb = Button(okvir_barve, text='Rdeča', bg="red", command = rdeca)
-zelen_gumb = Button(okvir_barve, text='Zelena', bg="green", command = zelena)
-oranzen_gumb = Button(okvir_barve, text='Oranžna', bg="orange", command = oranzna)
-vijola_gumb = Button(okvir_barve, text='Vijola', bg="purple", fg="white", command = vijola)
+moder_gumb = Button(okvir_barve, text='Modra', bg="blue", fg="white", command = lambda : SpawnKrog("blue", parametri.poskus, parametri.tezavnost, parametri.x1, parametri.x2, parametri.y1, parametri.y2))
+rumen_gumb = Button(okvir_barve, text='Rumena', bg="yellow", command = lambda : SpawnKrog("yellow", parametri.poskus, parametri.tezavnost, parametri.x1, parametri.x2, parametri.y1, parametri.y2))
+rdec_gumb = Button(okvir_barve, text='Rdeča', bg="red", command = lambda : SpawnKrog("red", parametri.poskus, parametri.tezavnost, parametri.x1, parametri.x2, parametri.y1, parametri.y2))
+zelen_gumb = Button(okvir_barve, text='Zelena', bg="green", command = lambda : SpawnKrog("green", parametri.poskus, parametri.tezavnost, parametri.x1, parametri.x2, parametri.y1, parametri.y2))
+oranzen_gumb = Button(okvir_barve, text='Oranžna', bg="orange", command = lambda : SpawnKrog("orange", parametri.poskus, parametri.tezavnost, parametri.x1, parametri.x2, parametri.y1, parametri.y2))
+vijola_gumb = Button(okvir_barve, text='Vijola', bg="purple", fg="white", command = lambda : SpawnKrog("purple", parametri.poskus, parametri.tezavnost, parametri.x1, parametri.x2, parametri.y1, parametri.y2))
+
 moder_gumb.pack(side=LEFT)
 rdec_gumb.pack(side=LEFT)
 rumen_gumb.pack(side=LEFT)
@@ -274,7 +212,7 @@ okno.config(menu=menu)
 pod_menu = Menu(menu)
 menu.add_cascade(label='Meni', menu=pod_menu)
 pod_menu.add_command(label='Nova igra', command=nova_igra)
-pod_menu.add_cascade(label='Pravila', command=pravila)
+pod_menu.add_command(label='Pravila', command=pravila)
 pod_menu.add_separator()
 pod_menu.add_command(label='Izhod', command=okno.destroy)
 
@@ -284,13 +222,15 @@ pod_menu_2.add_command(label='Lahko', command=lahka_tezavnost)
 pod_menu_2.add_command(label='Srednje', command=srednja_tezavnost)
 pod_menu_2.add_command(label='Težko', command=tezja_tezavnost)
 
-resitev_okvir = Frame(okno)
 igra_okvir = Frame(okno)
-polje_resitev = Canvas(resitev_okvir, width=400, height=50)
 polje_krogi = Canvas(igra_okvir, width=200, height=300)
+polje_preverjanje = Canvas(igra_okvir, width = 200, height = 300)
+
+resitev_okvir = Frame(okno)
+polje_resitev = Canvas(resitev_okvir, width=400, height=50)
+
 resitev_okvir.pack(side=BOTTOM)
 igra_okvir.pack(side=BOTTOM)
-polje_preverjanje = Canvas(igra_okvir, width = 200, height = 300)
 polje_krogi.pack(side = LEFT)
 polje_preverjanje.pack(side = RIGHT)
 polje_resitev.pack(side = BOTTOM)
